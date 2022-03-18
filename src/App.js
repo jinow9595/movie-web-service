@@ -9,7 +9,7 @@ function App() {
   console.log("run everytime");
 
   const once = () => {
-    console.log("run only once");
+    console.log("run only once"); // API 호출 등
   };
 
   useEffect(once, []);
