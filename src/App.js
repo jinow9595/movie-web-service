@@ -10,8 +10,6 @@ function App() {
     setKeyword(event.target.value)
   };
 
-  console.log("run everytime");
-
   const once = () => {
     console.log("run only once"); // API 호출 등
   };
@@ -19,8 +17,13 @@ function App() {
   useEffect(once, []);
 
   useEffect(() => {
-    console.log("search for", keyword);
+    if (keyword !== "")
+      console.log("search for", keyword);
   }, [keyword]); //keyword가 변경될 때마다 실행될 메서드
+
+  useEffect(() => {
+    console.log("counter change");
+  }, [counter]);
 
   return (
     <div>
