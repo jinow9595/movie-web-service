@@ -1,36 +1,34 @@
-import Button from "./Button";
-import styles from "./App.module.css";
 import { useState, useEffect } from "react";
 
 function App() {
-  const [counter, setCounter] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const clickEvent = () => setCounter(test => test + 1);
-  const changeEvent = (event) => {
-    setKeyword(event.target.value)
+  const [loading, setLoading] = useState(true);
+  const [movie, setMovie] = useState([]);
+
+  const getMovie = async () => {
+    const json = await (await fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=9&sort_by=year")).json();
+
+    setMovie(json.data.movies);
+    setLoading(false);
   };
 
-  const once = () => {
-    console.log("run only once"); // API 호출 등
-  };
-
-  useEffect(once, []);
-
   useEffect(() => {
-    if (keyword !== "")
-      console.log("search for", keyword);
-  }, [keyword]); //keyword가 변경될 때마다 실행될 메서드
+    getMovie();
+  }, []);
 
-  useEffect(() => {
-    console.log("counter change");
-  }, [counter]);
+  console.log(movie);
 
   return (
     <div>
-      <input onChange={changeEvent} value={keyword} type="text" placeholder="search..." />
-      <h1 className={styles.title}>hello</h1>
-      <Button text={"nothing"} />
-      <button onClick={clickEvent}>{counter}</button>
+      {loading ? <h1>Loading...</h1> : <div>{movie.map(item => (
+        <div key={item.id}>
+          <img src={item.medium_cover_image} />
+          <h2>{item.title}</h2>
+          <p>{item.summary}</p>
+          <ul>
+            {item.genres.map(g => <li key={g}>{g}</li>)}
+          </ul>
+        </div>
+      ))}</div>}
     </div>
   );
 }
